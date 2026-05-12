@@ -10,15 +10,18 @@ namespace RWAN10T.Api.Controllers
     public class PersonController : ControllerBase
     {
         private IPersonServices _personServices;
+        private readonly ILogger<PersonController> _logger;
 
-        public PersonController(IPersonServices personServices)
+        public PersonController(IPersonServices personServices, ILogger<PersonController> logger)
         {
             _personServices = personServices;
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<List<Person>> GetAll()
         {
+            _logger.LogInformation("Fetching all persons");
             var persons = _personServices.FindAll();
             return Ok(persons);
         }
@@ -26,15 +29,25 @@ namespace RWAN10T.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(long id)
         {
+            _logger.LogInformation("Fetching person with ID {Id}", id);
             var person = _personServices.FindById(id);
-            if (person == null) return NotFound();
+            if (person == null)
+            { 
+                _logger.LogWarning("Person with ID {Id} not found", id);
+                return NotFound();
+            }
             return Ok(person);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] Person person)
         {
-            if (person == null) return BadRequest();
+            _logger.LogInformation("Creating new person: {firstName}", person.FirstName);
+            if (person == null)
+            {
+                _logger.LogWarning("Failed to create person: {firstName}", person?.FirstName);
+                return BadRequest(); 
+            }
             var createdPerson = _personServices.Create(person);
             return Ok(createdPerson);
         }
@@ -42,15 +55,25 @@ namespace RWAN10T.Api.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] Person person)
         {
-            if (person == null) return BadRequest();
+            _logger.LogInformation("Updating person with {id}", person.Id);
+            if (person == null) 
+            {
+                _logger.LogError("Failed to update person: {id}", person?.Id);
+                return BadRequest(); 
+            }
             var updatedPerson = _personServices.Update(person);
+
+            _logger.LogDebug("Person with ID {id} updated successfully", person.Id);
             return Ok(updatedPerson);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
+            _logger.LogInformation("Deleting person with {id}", id);
             _personServices.Delete(id);
+
+            _logger.LogDebug("Person with ID {id} deleted successfully", id);
             return NoContent();
         }
     }
