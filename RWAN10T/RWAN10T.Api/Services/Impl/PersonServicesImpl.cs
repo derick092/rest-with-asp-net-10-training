@@ -1,50 +1,51 @@
 ﻿using RWAN10T.Api.Model;
+using RWAN10T.Api.Model.Context;
 
 namespace RWAN10T.Api.Services.Impl
 {
     public class PersonServicesImpl : IPersonServices
     {
+        private MSSQLContext _context;
+        public PersonServicesImpl(MSSQLContext context)
+        {
+            _context = context;
+        }
+
         public Person Create(Person person)
         {
-            person.Id = new Random().Next(1, 1000);
+            _context.Add(person);
+            _context.SaveChanges();
             return person;
         }
-        public Person Update(Person person)
+        public Person? Update(Person person)
         {
-            return person;
+            var existingPerson = _context.Persons.Find(person.Id);
+            if (existingPerson != null) 
+            {
+                _context.Entry(existingPerson).CurrentValues.SetValues(person);
+                _context.SaveChanges(); return person;
+            }
+
+            return null;
         }
 
         public void Delete(long id)
         {
-            
+            var person = _context.Persons.Find(id);
+            if (person != null)
+            {
+                _context.Persons.Remove(person);
+                _context.SaveChanges();
+            }
         }
-        public Person FindById(long id)
+        public Person? FindById(long id)
         {
-            return MockPerson();
+            return _context.Persons.FirstOrDefault(p => p.Id == id);
         }
 
         public List<Person> FindAll()
         {
-            return new List<Person>()
-            {
-                MockPerson(),
-                MockPerson(),
-                MockPerson(),
-                MockPerson(),
-                MockPerson()
-            };
-        }
-
-        private Person MockPerson() 
-        {
-            return new Person()
-            {
-                Id = new Random().Next(1, 1000),
-                FirstName = "Rwan",
-                LastName = "T",
-                Address = "Rwanda",
-                Gender = "Male"
-            };
+           return _context.Persons.ToList();
         }
     }
 }

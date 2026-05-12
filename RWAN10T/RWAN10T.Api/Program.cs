@@ -1,3 +1,4 @@
+using RWAN10T.Api.Configurations;
 using RWAN10T.Api.Services;
 using RWAN10T.Api.Services.Impl;
 
@@ -7,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<MathService>();
+builder.Services.AddDataBaseConfiguration(builder.Configuration);
+
 builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
 
 var app = builder.Build();
