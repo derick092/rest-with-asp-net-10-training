@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="RWAN10T.Api/RWAN10T.Api.csproj" />
+</Solution>
