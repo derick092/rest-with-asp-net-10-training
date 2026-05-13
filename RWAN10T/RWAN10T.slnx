@@ -3,4 +3,5 @@
     <File Path=".gitignore" />
   </Folder>
   <Project Path="RWAN10T.Api/RWAN10T.Api.csproj" />
+  <Project Path="RWAN10T.Tests/RWAN10T.Tests.csproj" Id="b8ff03ce-de17-4a48-ae44-4f4cbb1b7b97" />
 </Solution>
