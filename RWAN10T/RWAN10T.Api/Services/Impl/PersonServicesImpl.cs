@@ -1,5 +1,5 @@
-﻿using RWAN10T.Api.Data.Converter.Contract;
-using RWAN10T.Api.Data.DTO;
+﻿using RWAN10T.Api.Data.Converter.Impl;
+using RWAN10T.Api.Data.DTO.V1;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Model.Context;
 using RWAN10T.Api.Repositories;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RWAN10T.Api.Controllers
+namespace RWAN10T.Api.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     [ApiController]
     public class TestLogsController : Controller
     {

@@ -1,4 +1,4 @@
-﻿using RWAN10T.Api.Data.DTO;
+﻿using RWAN10T.Api.Data.DTO.V1;
 using RWAN10T.Api.Model;
 
 namespace RWAN10T.Api.Services

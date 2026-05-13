@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using RWAN10T.Api.Data.DTO;
+using RWAN10T.Api.Data.DTO.V1;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Repositories;
 

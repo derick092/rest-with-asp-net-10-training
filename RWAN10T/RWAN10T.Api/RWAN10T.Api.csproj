@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Converter\Impl\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 

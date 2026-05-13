@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RWAN10T.Api.Data.DTO
+namespace RWAN10T.Api.Data.DTO.V1
 {
     public class BookDTO
     {

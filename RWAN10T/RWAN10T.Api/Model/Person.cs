@@ -19,5 +19,7 @@ namespace RWAN10T.Api.Model
         [Required]
         [Column("gender", TypeName = "varchar(6)")]
         public string Gender { get; set; } = string.Empty;
+        //[NotMapped]
+        //public DateTime? BirthDay { get; set; }
     }
 }

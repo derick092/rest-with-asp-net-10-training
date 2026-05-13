@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RWAN10T.Api.Data.DTO;
+using RWAN10T.Api.Data.DTO.V1;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Services;
 
-namespace RWAN10T.Api.Controllers
+namespace RWAN10T.Api.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     [ApiController]
     public class BookController : Controller
     {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RWAN10T.Api.Data.DTO;
+using RWAN10T.Api.Data.DTO.V1;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Services;
 
-namespace RWAN10T.Api.Controllers
+namespace RWAN10T.Api.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     [ApiController]
     public class PersonController : ControllerBase
     {
@@ -50,6 +50,12 @@ namespace RWAN10T.Api.Controllers
                 return BadRequest(); 
             }
             var createdPerson = _personServices.Create(person);
+#pragma warning disable ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
+            Response.Headers.Add("X-API-Deprecated", "true");
+#pragma warning restore ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
+#pragma warning disable ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
+            Response.Headers.Add("X-API-Deprecation-Date", "2026-12-31");
+#pragma warning restore ASP0019 // Suggest using IHeaderDictionary.Append or the indexer
             return Ok(createdPerson);
         }
 
