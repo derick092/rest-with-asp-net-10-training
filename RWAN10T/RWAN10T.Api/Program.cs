@@ -14,9 +14,13 @@ builder.Services.AddControllers();
 
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
+builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
+
 builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
 
+builder.Services.AddScoped<IBookService, BookServicesImpl>();
+builder.Services.AddScoped<IBookRepository, BookRepositoryImpl>();
 
 var app = builder.Build();
 
