@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddContentNegotiation();
 
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
