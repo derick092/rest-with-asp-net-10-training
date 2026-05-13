@@ -6,8 +6,8 @@ namespace RWAN10T.Api.Services.Impl
 {
     public class PersonServicesImpl : IPersonServices
     {
-        private IPersonRepository _repository;
-        public PersonServicesImpl(IPersonRepository repository)
+        private IRepository<Person> _repository;
+        public PersonServicesImpl(IRepository<Person> repository)
         {
             _repository = repository;
         }

@@ -1,6 +1,5 @@
 using RWAN10T.Api.Configurations;
 using RWAN10T.Api.Repositories;
-using RWAN10T.Api.Repositories.Impl;
 using RWAN10T.Api.Services;
 using RWAN10T.Api.Services.Impl;
 
@@ -16,11 +15,10 @@ builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
 builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
 
-builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
-builder.Services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
+builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
 builder.Services.AddScoped<IBookService, BookServicesImpl>();
-builder.Services.AddScoped<IBookRepository, BookRepositoryImpl>();
 
 var app = builder.Build();
 

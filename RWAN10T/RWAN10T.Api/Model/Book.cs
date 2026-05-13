@@ -1,15 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RWAN10T.Api.Model.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RWAN10T.Api.Model
 {
     [Table("books")]
-    public class Book
+    public class Book : BaseEntity
     {
-        [Key]
-        [Column("id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
         [Required]
         [Column("title", TypeName = "varchar(200)")]
         public string Title { get; set; } = string.Empty;

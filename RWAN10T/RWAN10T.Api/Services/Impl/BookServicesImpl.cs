@@ -5,8 +5,8 @@ namespace RWAN10T.Api.Services.Impl
 {
     public class BookServicesImpl : IBookService
     {
-        private IBookRepository _repository;
-        public BookServicesImpl(IBookRepository repository)
+        private IRepository<Book> _repository;
+        public BookServicesImpl(IRepository<Book> repository)
         {
             _repository = repository;
         }
