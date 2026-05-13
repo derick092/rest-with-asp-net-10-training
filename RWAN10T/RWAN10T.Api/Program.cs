@@ -9,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenAPIConfig();
+builder.Services.AddSwaggerConfig();
+
 builder.Services.AddControllers().AddContentNegotiation();
 
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
@@ -16,6 +20,8 @@ builder.Services.AddDataBaseConfiguration(builder.Configuration);
 builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.Configure<RouteOptions>(options => 
+{ options.LowercaseUrls = true; options.LowercaseQueryStrings = true; });
 
 builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
 builder.Services.AddScoped<PersonServicesImplV2>();
@@ -30,5 +36,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSwaggerSpecification();
+app.UseScalarConfiguration();
 
 app.Run();
