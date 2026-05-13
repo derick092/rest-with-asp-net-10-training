@@ -7,12 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Impl\" />
+    <Compile Remove="Repositories\Impl\**" />
+    <Content Remove="Repositories\Impl\**" />
+    <EmbeddedResource Remove="Repositories\Impl\**" />
+    <None Remove="Repositories\Impl\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Converter\Impl\" />
     <Folder Include="Utils\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Evolve" Version="3.2.0" />
+    <PackageReference Include="Mapster" Version="10.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />

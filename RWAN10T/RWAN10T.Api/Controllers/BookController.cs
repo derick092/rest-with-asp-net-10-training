@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RWAN10T.Api.Data.DTO;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Services;
 
@@ -19,7 +20,7 @@ namespace RWAN10T.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Book>> GetAll()
+        public ActionResult<List<BookDTO>> GetAll()
         {
             _logger.LogInformation("Fetching all books");
             var books = _bookServices.FindAll();
@@ -40,7 +41,7 @@ namespace RWAN10T.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Book book)
+        public IActionResult Create([FromBody] BookDTO book)
         {
             _logger.LogInformation("Creating new book: {title}", book.Title);
             if (book == null)
@@ -53,7 +54,7 @@ namespace RWAN10T.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] Book book)
+        public IActionResult Update([FromBody] BookDTO book)
         {
             _logger.LogInformation("Updating book with {id}", book.Id);
             if (book == null)

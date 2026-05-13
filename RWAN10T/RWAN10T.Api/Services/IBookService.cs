@@ -1,13 +1,14 @@
-﻿using RWAN10T.Api.Model;
+﻿using RWAN10T.Api.Data.DTO;
+using RWAN10T.Api.Model;
 
 namespace RWAN10T.Api.Services
 {
     public interface IBookService
     {
-        Book Create(Book person);
-        Book? FindById(long id);
-        List<Book> FindAll();
-        Book? Update(Book person);
+        BookDTO Create(BookDTO person);
+        BookDTO? FindById(long id);
+        List<BookDTO>? FindAll();
+        BookDTO? Update(BookDTO person);
         void Delete(long id);
     }
 }

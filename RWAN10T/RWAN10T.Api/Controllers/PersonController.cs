@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RWAN10T.Api.Data.DTO;
 using RWAN10T.Api.Model;
 using RWAN10T.Api.Services;
 
@@ -40,7 +41,7 @@ namespace RWAN10T.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Person person)
+        public IActionResult Create([FromBody] PersonDTO person)
         {
             _logger.LogInformation("Creating new person: {firstName}", person.FirstName);
             if (person == null)
@@ -53,7 +54,7 @@ namespace RWAN10T.Api.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] Person person)
+        public IActionResult Update([FromBody] PersonDTO person)
         {
             _logger.LogInformation("Updating person with {id}", person.Id);
             if (person == null) 

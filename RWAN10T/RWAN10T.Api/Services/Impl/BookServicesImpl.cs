@@ -1,4 +1,6 @@
-﻿using RWAN10T.Api.Model;
+﻿using Mapster;
+using RWAN10T.Api.Data.DTO;
+using RWAN10T.Api.Model;
 using RWAN10T.Api.Repositories;
 
 namespace RWAN10T.Api.Services.Impl
@@ -11,27 +13,29 @@ namespace RWAN10T.Api.Services.Impl
             _repository = repository;
         }
 
-        public Book Create(Book book)
+        public BookDTO Create(BookDTO book)
         {
-            return _repository.Create(book);
+            var entity = book.Adapt<Book>();
+            return _repository.Create(entity).Adapt<BookDTO>();
         }
-        public Book? Update(Book book)
+        public BookDTO? Update(BookDTO book)
         {
-            return _repository.Update(book);
+            var entity = book.Adapt<Book>();
+            return _repository.Update(entity)?.Adapt<BookDTO>();
         }
 
         public void Delete(long id)
         {
             _repository.Delete(id);
         }
-        public Book? FindById(long id)
+        public BookDTO? FindById(long id)
         {
-            return _repository.FindById(id);
+            return _repository.FindById(id).Adapt<BookDTO>();
         }
 
-        public List<Book> FindAll()
+        public List<BookDTO>? FindAll()
         {
-            return _repository.FindAll();
+            return _repository.FindAll().Adapt<List<BookDTO>>();
         }
     }
 }
