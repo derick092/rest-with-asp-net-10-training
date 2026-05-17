@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RWAN10T.Tests
+namespace RWAN10T.Tests.UnitTests
 {
     public class PersonConverterTests
     {

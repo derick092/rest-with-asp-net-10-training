@@ -10,6 +10,14 @@ namespace RWAN10T.Api.Configurations
         {
             if (enviroment.IsDevelopment()) 
             {
+                // Allow tests or other hosts to disable migrations via configuration
+                var runMigrations = configuration["RUN_MIGRATIONS"];
+                if (!string.IsNullOrEmpty(runMigrations) && string.Equals(runMigrations, "false", StringComparison.OrdinalIgnoreCase))
+                {
+                    Log.Information("Database migrations disabled by configuration (RUN_MIGRATIONS=false).");
+                    return services;
+                }
+
                 var evolveConnectionString = configuration["MSSQLServerConnection:MSSQLServerConnectionString"];
 
                 if (String.IsNullOrEmpty(evolveConnectionString))
@@ -17,13 +25,8 @@ namespace RWAN10T.Api.Configurations
 
                 try
                 {
-                    using var evolveConnection = new SqlConnection(evolveConnectionString);
-                    var evolve = new Evolve(evolveConnection, msg => Log.Information(msg))
-                    {
-                        Locations = new[] { "db/migrations", "db/dataset" },
-                        IsEraseDisabled = true,
-                    };
-                    evolve.Migrate();
+                    ExecuteMigrations(evolveConnectionString);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -33,6 +36,37 @@ namespace RWAN10T.Api.Configurations
             }
 
             return services;
+        }
+
+        public static void ExecuteMigrations(string connectionString) 
+        {
+            using var evolveConnection = new SqlConnection(connectionString);
+
+            const int maxRetries = 5;
+            var delay = TimeSpan.FromSeconds(2);
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
+            {
+                try
+                {
+                    evolveConnection.Open();
+                    break;
+                }
+                catch (SqlException ex) when (attempt < maxRetries)
+                {
+                    Log.Warning(ex, "Tentativa {Attempt} falhou ao conectar ao banco. Retentando em {Delay}...", attempt, delay);
+                    Thread.Sleep(delay);
+                    delay = TimeSpan.FromSeconds(delay.TotalSeconds * 2);
+                    continue;
+                }
+            }
+
+            var evolve = new Evolve(evolveConnection, msg => Log.Information(msg))
+            {
+                Locations = new[] { "db/migrations", "db/dataset" },
+                IsEraseDisabled = true,
+            };
+            evolve.Migrate();
         }
     }
 }
