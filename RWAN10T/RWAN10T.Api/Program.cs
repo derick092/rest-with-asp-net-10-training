@@ -15,6 +15,8 @@ builder.Services.AddSwaggerConfig();
 
 builder.Services.AddControllers().AddContentNegotiation();
 
+builder.Services.AddCorsConfiguration(builder.Configuration);
+
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
 builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
@@ -31,6 +33,9 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+app.UseRouting();
+app.UseCorsConfiguration(builder.Configuration);
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -39,5 +44,6 @@ app.MapControllers();
 
 app.UseSwaggerSpecification();
 app.UseScalarConfiguration();
+
 
 app.Run();

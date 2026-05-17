@@ -34,13 +34,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content 
-			Include="..\RWAN10T.Api\db\migrations\**\*.sql" 
-			 Link="db\migrations\%(RecursiveDir)%(Filename)%(Extension)" 
-			 CopyToOutputDirectory="Always" />
-		<Content
-			Include="..\RWAN10T.Api\db\dataset\**\*.sql"
-			 Link="db\dataset\%(RecursiveDir)%(Filename)%(Extension)"
-			 CopyToOutputDirectory="Always" />
+		<Content Include="..\RWAN10T.Api\db\migrations\**\*.sql" Link="db\migrations\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
+		<Content Include="..\RWAN10T.Api\db\dataset\**\*.sql" Link="db\dataset\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 </Project>
