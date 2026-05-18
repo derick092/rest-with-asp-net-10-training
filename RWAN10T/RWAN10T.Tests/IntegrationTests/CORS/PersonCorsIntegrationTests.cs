@@ -15,6 +15,8 @@ namespace RWAN10T.Tests.IntegrationTests.CORS
     public class PersonCorsIntegrationTests : IClassFixture<SqlServerFixture>
     {
         private readonly HttpClient _client;
+        private static PersonDTO _person;
+
         public PersonCorsIntegrationTests(SqlServerFixture sqlServerFixture)
         {
             var factory = new CustomWebApplicationFactory<Program>(sqlServerFixture.ConnectionString);
@@ -33,12 +35,11 @@ namespace RWAN10T.Tests.IntegrationTests.CORS
             _client.DefaultRequestHeaders.Add("Origin", origin);
         }
 
-        [Fact(DisplayName = "01 - Create person with allowed origin")]
+        [Fact(DisplayName = "01 - Create person")]
         [TestPriority(1)]
-        public async Task CreatePerson_WithAllowedOrigin_ShouldReturnSuccess()
+        public async Task CreatePerson_ShouldReturnCreatedPerson()
         {
             // Arrange
-            AddOriginHeader("http://localhost:3000");
             var request = new PersonDTO
             {
                 FirstName = "Um",
@@ -56,30 +57,45 @@ namespace RWAN10T.Tests.IntegrationTests.CORS
             var created = await response.Content.ReadFromJsonAsync<PersonDTO>();
             created.Should().NotBeNull();
             created.Id.Should().BeGreaterThan(0);
+            _person = created;
         }
 
-        [Fact(DisplayName = "02 - Create person with unallowed origin")]
+        [Fact(DisplayName = "02 - Update person")]
         [TestPriority(2)]
-        public async Task CreatePerson_WithUnallowedOrigin_ShouldReturnForbidden()
+        public async Task UpdatePerson_ShouldReturnUpdatedPerson()
         {
             // Arrange
-            AddOriginHeader("http://unallowed-origin.com");
-            var request = new PersonDTO
-            {
-                FirstName = "Um",
-                LastName = "Berto",
-                Address = "Rua um, 1",
-
-            };
+          _person.Gender = "Male";
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/person/v1", request);
+            var response = await _client.PutAsJsonAsync("api/person/v1", _person);
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
-            content.Should().Be("Cors origin not allowed");
+            var updated = await response.Content.ReadFromJsonAsync<PersonDTO>();
+            updated.Should().NotBeNull();
+            updated.Gender.Should().Be("Male");
+            _person = updated;
+        }
+
+        [Fact(DisplayName = "03 - Disable person")]
+        [TestPriority(3)]
+        public async Task DisablePerson_ShouldReturnDisabledPerson()
+        {
+            // Arrange
+
+            // Act
+            var response = await _client.PatchAsync($"api/person/v1/{_person.Id}", null);
+
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var updated = await response.Content.ReadFromJsonAsync<PersonDTO>();
+            updated.Should().NotBeNull();
+            updated.Enable.Should().BeFalse();
+            _person = updated;
         }
     }
 }

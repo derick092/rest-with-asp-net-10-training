@@ -11,5 +11,6 @@ namespace RWAN10T.Api.Data.DTO.V1
         public string LastName { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Gender { get; set; } = string.Empty;
+        public bool Enable { get; set; }
     }
 }

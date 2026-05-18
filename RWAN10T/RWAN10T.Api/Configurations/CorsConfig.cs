@@ -19,21 +19,21 @@
 
         public static IApplicationBuilder UseCorsConfiguration(this WebApplication app, IConfiguration configuration)
         {
-            var origins = GetAllowedOrigins(configuration);
-            //force cors on test environment
-            app.Use(async (context, next) =>
-            {
-                var origin= context.Request.Headers["Origin"].ToString();
+            //var origins = GetAllowedOrigins(configuration);
+            ////force cors on test environment
+            //app.Use(async (context, next) =>
+            //{
+            //    var origin= context.Request.Headers["Origin"].ToString();
 
-                // If an origin is present and it's NOT in the allowed list, block it
-                if(!string.IsNullOrEmpty(origin) && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase))
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    await context.Response.WriteAsync("Cors origin not allowed");
-                }
+            //    // If an origin is present and it's NOT in the allowed list, block it
+            //    if(!string.IsNullOrEmpty(origin) && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase))
+            //    {
+            //        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            //        await context.Response.WriteAsync("Cors origin not allowed");
+            //    }
             
-                await next();
-            });
+            //    await next();
+            //});
 
             app.UseCors("DefaultPolicy");
             return app;

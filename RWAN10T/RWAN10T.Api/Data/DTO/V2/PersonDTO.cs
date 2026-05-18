@@ -20,5 +20,7 @@ namespace RWAN10T.Api.Data.DTO.V2
         //[JsonPropertyOrder(2)]
         //[JsonConverter(typeof(JsonSerializer.DateSerializer))]
         public DateTime? BirthDay { get; set; }
+        public bool Enable { get; set; }
+
     }
 }

@@ -6,7 +6,7 @@ namespace RWAN10T.Api.Repositories
 {
     public class GenericRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private MSSQLContext _context;
+        protected MSSQLContext _context;
         private DbSet<T> _dataSet;
 
         public GenericRepository(MSSQLContext context)

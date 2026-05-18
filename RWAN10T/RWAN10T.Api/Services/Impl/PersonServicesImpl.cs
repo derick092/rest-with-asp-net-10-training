@@ -8,10 +8,10 @@ namespace RWAN10T.Api.Services.Impl
 {
     public class PersonServicesImpl : IPersonServices
     {
-        private IRepository<Person> _repository;
+        private IPersonRepository _repository;
         private readonly PersonConverter _converter;
 
-        public PersonServicesImpl(IRepository<Person> repository)
+        public PersonServicesImpl(IPersonRepository repository)
         {
             _repository = repository;
             _converter = new PersonConverter();
@@ -38,6 +38,16 @@ namespace RWAN10T.Api.Services.Impl
         public List<PersonDTO>? FindAll()
         {
             return _converter.ParseList(_repository.FindAll());
+        }
+
+        public PersonDTO? Disable(long id)
+        {
+            if (_repository != null)
+            {
+                var person = _repository.Disable(id);
+                return _converter.Parse(person);
+            }
+            return null;
         }
     }
 }

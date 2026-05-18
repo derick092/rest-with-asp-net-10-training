@@ -90,5 +90,21 @@ namespace RWAN10T.Api.Controllers.V1
             _logger.LogDebug("Person with ID {id} deleted successfully", id);
             return NoContent();
         }
+
+        [HttpPatch("{id}")]
+        public IActionResult Disable(long id) 
+        {
+            _logger.LogInformation("Disabling person with {id}", id);
+           var disabledPerson =  _personServices.Disable(id);
+
+            if (disabledPerson == null) 
+            {
+                _logger.LogError("Failed to disable person with ID {id}", id);
+                return NotFound();
+            }
+
+            _logger.LogDebug("Person with ID {id} disabled successfully", id);
+            return Ok(disabledPerson);
+        }
     }
 }

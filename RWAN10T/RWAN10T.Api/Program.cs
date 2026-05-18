@@ -22,6 +22,7 @@ builder.Services.AddDataBaseConfiguration(builder.Configuration);
 builder.Services.AddEvolveConfiguration(builder.Configuration, builder.Environment);
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.Configure<RouteOptions>(options => 
 { options.LowercaseUrls = true; options.LowercaseQueryStrings = true; });
 
