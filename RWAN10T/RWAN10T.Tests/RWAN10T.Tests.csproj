@@ -37,4 +37,10 @@
 		<Content Include="..\RWAN10T.Api\db\migrations\**\*.sql" Link="db\migrations\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
 		<Content Include="..\RWAN10T.Api\db\dataset\**\*.sql" Link="db\dataset\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="Always" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="appsettings.Test.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 </Project>

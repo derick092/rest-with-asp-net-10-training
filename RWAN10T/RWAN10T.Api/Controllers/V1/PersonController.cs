@@ -21,9 +21,9 @@ namespace RWAN10T.Api.Controllers.V1
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        //[ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(401)]
         public ActionResult<List<Person>> GetAll()
         {
             _logger.LogInformation("Fetching all persons");
@@ -32,9 +32,9 @@ namespace RWAN10T.Api.Controllers.V1
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(PersonDTO))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
+        //[ProducesResponseType(200, Type = typeof(PersonDTO))]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(401)]
         public IActionResult GetById(long id)
         {
             _logger.LogInformation("Fetching person with ID {Id}", id);

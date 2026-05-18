@@ -1,4 +1,5 @@
 using RWAN10T.Api.Configurations;
+using RWAN10T.Api.Hypermdia.Filters;
 using RWAN10T.Api.Repositories;
 using RWAN10T.Api.Services;
 using RWAN10T.Api.Services.Impl;
@@ -13,9 +14,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenAPIConfig();
 builder.Services.AddSwaggerConfig();
 
-builder.Services.AddControllers().AddContentNegotiation();
+builder.Services.AddControllers(options => 
+{
+    options.Filters.Add<HypermediaFilter>();
+}).AddContentNegotiation();
 
 builder.Services.AddCorsConfiguration(builder.Configuration);
+builder.Services.AddHATEOASConfiguration();
 
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
@@ -42,6 +47,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHATEOASRoutes();
 
 app.UseSwaggerSpecification();
 app.UseScalarConfiguration();

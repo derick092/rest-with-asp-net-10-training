@@ -16,8 +16,7 @@ namespace RWAN10T.Tests.IntegrationTests.Tools
         public SqlServerFixture()
         {
             Container = new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
-                .WithPassword("@Admin123")
-                .WithPortBinding(0, 1433)
+                .WithPassword("@Admin123$")
                 .Build();
 
         }

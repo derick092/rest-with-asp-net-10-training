@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RWAN10T.Api.Model.Context;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace RWAN10T.Tests.IntegrationTests.Tools
@@ -22,13 +26,24 @@ namespace RWAN10T.Tests.IntegrationTests.Tools
         {
             builder.ConfigureAppConfiguration((context, config) =>
             {
-                var inMemorySettings = new Dictionary<string, string>
+                var testConfigPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "appsettings.Test.json");
+                config.Sources.Clear();
+                config.AddJsonFile(testConfigPath, optional:false, reloadOnChange: true);
+            });
+
+            builder.ConfigureServices(services => 
+            {
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MSSQLContext>));
+
+                if(descriptor != null)
                 {
-                    ["MSSQLServerConnection:MSSQLServerConnectionString"] = _connectionString,
-                    // Disable migrations during test host startup; migrations are applied by the test fixture
-                    ["RUN_MIGRATIONS"] = "false"
-                };
-                config.AddInMemoryCollection(inMemorySettings!);
+                    services.Remove(descriptor);
+                }
+
+                services.AddDbContext<MSSQLContext>(options =>
+                {
+                    options.UseSqlServer(_connectionString);
+                });
             });
         }
     }
