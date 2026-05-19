@@ -74,7 +74,10 @@ var app = builder.Build();
 app.UseRouting();
 app.UseCorsConfiguration(builder.Configuration);
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment()) 
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 
@@ -87,4 +90,7 @@ app.UseHATEOASRoutes();
 app.UseSwaggerSpecification();
 app.UseScalarConfiguration();
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://*:{port}");
+
+//app.Run();
