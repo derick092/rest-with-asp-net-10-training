@@ -35,6 +35,9 @@ builder.Services.AddScoped<IPersonServices, PersonServicesImpl>();
 builder.Services.AddScoped<PersonServicesImplV2>();
 builder.Services.AddScoped<IBookService, BookServicesImpl>();
 
+builder.Services.AddSingleton<HttpContextAccessor>();
+builder.Services.AddScoped<IFileServices, FileServicesImpl>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
