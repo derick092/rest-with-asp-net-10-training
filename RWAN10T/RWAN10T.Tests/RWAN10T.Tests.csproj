@@ -43,4 +43,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="IntegrationTests\CORS\" />
+	  <Folder Include="IntegrationTests\HATEOAS\" />
+	</ItemGroup>
 </Project>

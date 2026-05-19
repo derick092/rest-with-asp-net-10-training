@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using RWAN10T.Api.Data.DTO.V1;
@@ -8,6 +9,7 @@ namespace RWAN10T.Api.Controllers.V1
 {
     [Route("api/[controller]/v1")]
     [ApiController]
+    [Authorize("Bearer")]
     public class FileController(IFileServices fileServices, ILogger<FileController> logger) : ControllerBase
     {
         private IFileServices _fileServices = fileServices;

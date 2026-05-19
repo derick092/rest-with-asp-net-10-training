@@ -1,3 +1,5 @@
+using RWAN10T.Api.Auth.Contract;
+using RWAN10T.Api.Auth.Tools;
 using RWAN10T.Api.Configurations;
 using RWAN10T.Api.Files.Exporters.Factory;
 using RWAN10T.Api.Files.Exporters.Impl;
@@ -55,6 +57,16 @@ builder.Services.AddScoped<FileExporterFactory>();
 builder.Services.AddScoped<IEmailService, EmailServiceImpl>();
 builder.Services.AddScoped<EmailSender>();
 
+builder.Services.AddAuthConfiguration(builder.Configuration);
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IPasswordHasher, Sha256PasswordHasher>();
+builder.Services.AddScoped<IUserAuthService, UserAuthServiceImpl>();
+builder.Services.AddScoped<ILoginService, LoginServices>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,6 +76,8 @@ app.UseCorsConfiguration(builder.Configuration);
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
@@ -72,6 +86,5 @@ app.UseHATEOASRoutes();
 
 app.UseSwaggerSpecification();
 app.UseScalarConfiguration();
-
 
 app.Run();
