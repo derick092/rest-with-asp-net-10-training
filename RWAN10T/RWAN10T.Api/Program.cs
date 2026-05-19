@@ -4,6 +4,7 @@ using RWAN10T.Api.Files.Exporters.Impl;
 using RWAN10T.Api.Files.Importers.Factory;
 using RWAN10T.Api.Files.Importers.Impl;
 using RWAN10T.Api.Hypermdia.Filters;
+using RWAN10T.Api.Mail;
 using RWAN10T.Api.Repositories;
 using RWAN10T.Api.Services;
 using RWAN10T.Api.Services.Impl;
@@ -25,6 +26,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddHATEOASConfiguration();
+builder.Services.AddEmailConfiguration(builder.Configuration);
 
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 
@@ -49,6 +51,9 @@ builder.Services.AddScoped<FileImporterFactory>();
 builder.Services.AddScoped<CsvExporter>();
 builder.Services.AddScoped<ExcelExporter>();
 builder.Services.AddScoped<FileExporterFactory>();
+
+builder.Services.AddScoped<IEmailService, EmailServiceImpl>();
+builder.Services.AddScoped<EmailSender>();
 
 var app = builder.Build();
 
