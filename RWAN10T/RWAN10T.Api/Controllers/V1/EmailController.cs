@@ -19,7 +19,7 @@ namespace RWAN10T.Api.Controllers.V1
             _logger = logger;
         }
 
-        [HttpPost]
+        [HttpPost("sendMail")]
         public IActionResult SendEmail([FromBody] EmailRequestDTO emailRequest)
         {
             _logger.LogInformation("Sending email to: {to}", emailRequest.To);
@@ -35,7 +35,7 @@ namespace RWAN10T.Api.Controllers.V1
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("sendMailWithAttachment")]
         public IActionResult SendEmailWithAttachment([FromBody] EmailRequestDTO emailRequest, [FromForm] FileUploadDTO file)
         {
             _logger.LogInformation("Sending email with attachment to: {to}", emailRequest.To);
