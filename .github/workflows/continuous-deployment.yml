@@ -8,15 +8,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: RWAN10T
+
     steps:
       # =========================
-      # Checkout primeiro SEMPRE
+      # Checkout
       # =========================
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # =========================
-      # SQL Server container
+      # Debug opcional (remove depois se quiser)
+      # =========================
+      - name: List files
+        run: ls -R
+
+      # =========================
+      # SQL Server
       # =========================
       - name: Start SQL Server container
         run: |
@@ -43,6 +53,9 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # =========================
+      # Build pipeline
+      # =========================
       - name: Restore dependencies
         run: dotnet restore RWAN10T.sln
 
@@ -57,7 +70,7 @@ jobs:
       # =========================
       - name: Docker compose build
         run: docker compose build
-        working-directory: RWAN10T/RWAN10T.Api
+        working-directory: RWAN10T.Api
 
       # =========================
       # Docker Hub login
@@ -69,10 +82,12 @@ jobs:
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
       # =========================
-      # Tag + Push image
+      # Push image
       # =========================
-      - name: Push Docker image
+      - name: Build & Push Docker image
         run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/RWAN10T:latest .
+
           docker tag ${{ secrets.DOCKER_USERNAME }}/RWAN10T:latest \
                      ${{ secrets.DOCKER_USERNAME }}/RWAN10T:${{ github.run_id }}
 
