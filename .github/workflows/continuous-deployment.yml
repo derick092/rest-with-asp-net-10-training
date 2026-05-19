@@ -1,4 +1,4 @@
-name: Continuous Integration, Delivery and Deployment with Github Actions and .NET 10
+name: CI - RWAN10T (.NET 10)
 
 on:
   push:
@@ -9,53 +9,72 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # =========================
+      # Checkout primeiro SEMPRE
+      # =========================
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Create SQL Server Container
-      run: |
-        docker run -d --name sqlserver_test \
-          -e "ACCEPT_EULA=Y" \
-          -e "MSSQL_SA_PASSWORD=@Admin123" \
-          -p 1433:1433 \
-          mcr.microsoft.com/mssql/server:2022-latest
+      # =========================
+      # SQL Server container
+      # =========================
+      - name: Start SQL Server container
+        run: |
+          docker run -d --name sqlserver_test \
+            -e "ACCEPT_EULA=Y" \
+            -e "MSSQL_SA_PASSWORD=@Admin123" \
+            -p 1433:1433 \
+            mcr.microsoft.com/mssql/server:2022-latest
 
-        timeout 90s bash -c "until docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '@Admin123' -Q 'SELECT 1' -C; do sleep 5; done"
+          echo "Waiting SQL Server..."
+          timeout 90s bash -c "until docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '@Admin123' -Q 'SELECT 1' -C; do sleep 5; done"
 
-    - name: Create SQL Server Database
-      run: docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '@Admin123' -Q "IF DB_ID('RWAN10T') IS NULL CREATE DATABASE [RWAN10T]" -C
+      - name: Create database
+        run: |
+          docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd \
+            -S localhost -U SA -P '@Admin123' \
+            -Q "IF DB_ID('RWAN10T') IS NULL CREATE DATABASE [RWAN10T]" -C
 
-    - name: Checkout Repository Code
-      uses: actions/checkout@v4
+      # =========================
+      # .NET setup
+      # =========================
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-    
-    - name: Setup .NET 10
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '10.0.x'
-    
-    - name: Restore Dependencies
-      run: dotnet restore RWAN10T.sln
-      working-directory: 31_DeploingOurAppToAzure/RWAN10T
-    
-    - name: Build ASP.NET 10 App
-      run: dotnet build RWAN10T.sln --configuration Release --no-restore
-      working-directory: 31_DeploingOurAppToAzure/RWAN10T
-    
-    - name: Test ASP.NET 10 App
-      run: dotnet test RWAN10T.sln --configuration Release --no-build --logger "console;verbosity=detailed"  
-      working-directory: 31_DeploingOurAppToAzure/RWAN10T
-    
-    - name: Docker Compose Build
-      run: docker compose build
-      working-directory: 31_DeploingOurAppToAzure/RWAN10T
-    
-    - name: Push to Docker Hub Container Registry
-      run: |
-        docker tag ${{secrets.DOCKER_USERNAME}}/RWAN10T:latest ${{secrets.DOCKER_USERNAME}}/RWAN10T:${{github.run_id}}
+      - name: Restore dependencies
+        run: dotnet restore RWAN10T.sln
 
-        docker push ${{secrets.DOCKER_USERNAME}}/RWAN10T:latest
-        docker push ${{secrets.DOCKER_USERNAME}}/RWAN10T:${{github.run_id}}
+      - name: Build solution
+        run: dotnet build RWAN10T.sln -c Release --no-restore
+
+      - name: Run tests
+        run: dotnet test RWAN10T.sln -c Release --no-build --logger "console;verbosity=detailed"
+
+      # =========================
+      # Docker build
+      # =========================
+      - name: Docker compose build
+        run: docker compose build
+        working-directory: RWAN10T/RWAN10T.Api
+
+      # =========================
+      # Docker Hub login
+      # =========================
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      # =========================
+      # Tag + Push image
+      # =========================
+      - name: Push Docker image
+        run: |
+          docker tag ${{ secrets.DOCKER_USERNAME }}/RWAN10T:latest \
+                     ${{ secrets.DOCKER_USERNAME }}/RWAN10T:${{ github.run_id }}
+
+          docker push ${{ secrets.DOCKER_USERNAME }}/RWAN10T:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/RWAN10T:${{ github.run_id }}
