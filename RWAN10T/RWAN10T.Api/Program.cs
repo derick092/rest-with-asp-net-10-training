@@ -1,4 +1,8 @@
 using RWAN10T.Api.Configurations;
+using RWAN10T.Api.Files.Exporters.Factory;
+using RWAN10T.Api.Files.Exporters.Impl;
+using RWAN10T.Api.Files.Importers.Factory;
+using RWAN10T.Api.Files.Importers.Impl;
 using RWAN10T.Api.Hypermdia.Filters;
 using RWAN10T.Api.Repositories;
 using RWAN10T.Api.Services;
@@ -37,6 +41,14 @@ builder.Services.AddScoped<IBookService, BookServicesImpl>();
 
 builder.Services.AddSingleton<HttpContextAccessor>();
 builder.Services.AddScoped<IFileServices, FileServicesImpl>();
+
+builder.Services.AddScoped<CsvFileImporter>();
+builder.Services.AddScoped<ExcelFileImporter>();
+builder.Services.AddScoped<FileImporterFactory>();
+
+builder.Services.AddScoped<CsvExporter>();
+builder.Services.AddScoped<ExcelExporter>();
+builder.Services.AddScoped<FileExporterFactory>();
 
 var app = builder.Build();
 

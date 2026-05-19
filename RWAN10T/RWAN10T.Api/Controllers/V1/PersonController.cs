@@ -126,5 +126,36 @@ namespace RWAN10T.Api.Controllers.V1
             _logger.LogInformation("Searching for persons with query: {name}, sortDirection: {sortDirection}, pageSize: {pageSize}, page: {page}", name, sortDirection, pageSize, page);
             return Ok(_personServices.FindWithPagedSearch(name, sortDirection, pageSize, page));
         }
+
+        [HttpPost("massCreation")]
+        public async Task<IActionResult> MassCreation([FromForm] FileUploadDTO file) 
+        {
+            _logger.LogInformation("Starting mass creation of persons from file: {fileName}", file.File.FileName);
+            var result = await _personServices.MassCreationAsync(file.File);
+            return Ok(result);
+        }
+
+        [HttpGet("exportPage/{sortDirection}/{pageSize}/{page}")]
+        public IActionResult ExportPage(string sortDirection, int pageSize, int page, [FromQuery] string name = "")
+        {
+            var acceptHeader = Request.Headers["Accept"].ToString();
+            if (string.IsNullOrWhiteSpace(acceptHeader))
+            {
+                return BadRequest("Accept header is required for this endpoint!");
+            }
+            _logger.LogInformation("Exporting persons with query: sortDirection: {sortDirection}, pageSize: {pageSize}, page: {page}", sortDirection, pageSize, page);
+
+            try
+            {
+                var fileResult = _personServices.ExportPage(page, pageSize, sortDirection, acceptHeader, name);
+
+                return fileResult;
+            }
+            catch (NotSupportedException ex)
+            {
+                _logger.LogWarning(ex, "Export format not supported: {AcceptHeader}", acceptHeader);
+                return StatusCode(StatusCodes.Status415UnsupportedMediaType);
+            }
+        }
     }
 }
