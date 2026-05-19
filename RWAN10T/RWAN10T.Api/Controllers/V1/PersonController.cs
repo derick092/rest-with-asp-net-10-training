@@ -106,5 +106,25 @@ namespace RWAN10T.Api.Controllers.V1
             _logger.LogDebug("Person with ID {id} disabled successfully", id);
             return Ok(disabledPerson);
         }
+
+        [HttpGet("find-by-name")]
+        public IActionResult GetByName([FromQuery] string firstName, [FromQuery] string lastName)
+        {
+            _logger.LogInformation("Searching for persons with name: {firstName} {lastName}", firstName, lastName);
+            var persons = _personServices.FindByName(firstName, lastName);
+            if (persons == null || !persons.Any())
+            {
+                _logger.LogWarning("No persons found with name: {firstName} {lastName}", firstName, lastName);
+                return NotFound();
+            }
+            return Ok(persons);
+        }
+
+        [HttpGet("{sortDirection}/{pageSize}/{page}")]
+        public IActionResult GetByQuery([FromQuery] string name, string sortDirection, int pageSize, int page)
+        {
+            _logger.LogInformation("Searching for persons with query: {name}, sortDirection: {sortDirection}, pageSize: {pageSize}, page: {page}", name, sortDirection, pageSize, page);
+            return Ok(_personServices.FindWithPagedSearch(name, sortDirection, pageSize, page));
+        }
     }
 }

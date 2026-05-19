@@ -47,6 +47,22 @@ namespace RWAN10T.Api.Repositories
             return _dataSet.Find(id);
         }
 
+        public List<T> FindWithPagedSearch(string query)
+        {
+            return [.. _dataSet.FromSqlRaw(query)];
+        }
+
+        public int GetCount(string query)
+        {
+            using var connection = _context.Database.GetDbConnection();
+            connection.Open();
+            using var command = connection.CreateCommand();
+            command.CommandText = query;
+
+            var result = command.ExecuteScalar();
+            return Convert.ToInt32(result);
+        }
+
         public T? Update(T item)
         {
             var existingItem = _context.Books.Find(item.Id);

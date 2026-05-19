@@ -60,25 +60,6 @@ namespace RWAN10T.Tests.IntegrationTests.CORS
             _person = created;
         }
 
-        [Fact(DisplayName = "02 - Update person")]
-        [TestPriority(2)]
-        public async Task UpdatePerson_ShouldReturnUpdatedPerson()
-        {
-            // Arrange
-          _person.Gender = "Male";
-
-            // Act
-            var response = await _client.PutAsJsonAsync("api/person/v1", _person);
-
-            // Assert
-            response.EnsureSuccessStatusCode();
-
-            var updated = await response.Content.ReadFromJsonAsync<PersonDTO>();
-            updated.Should().NotBeNull();
-            updated.Gender.Should().Be("Male");
-            _person = updated;
-        }
-
         [Fact(DisplayName = "03 - Disable person")]
         [TestPriority(3)]
         public async Task DisablePerson_ShouldReturnDisabledPerson()

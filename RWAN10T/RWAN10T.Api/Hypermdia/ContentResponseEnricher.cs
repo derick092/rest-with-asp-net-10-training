@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using RWAN10T.Api.Hypermdia.Abstract;
+using RWAN10T.Api.Hypermdia.Utils;
 
 namespace RWAN10T.Api.Hypermdia
 {
@@ -11,7 +12,8 @@ namespace RWAN10T.Api.Hypermdia
         public virtual bool CanEnrich(Type contentType)
         {
             return contentType == typeof(T)
-                || contentType == typeof(List<T>);
+                || contentType == typeof(List<T>)
+                || contentType == typeof(PagedSearchDTO<T>);
         }
 
         protected abstract Task EnrichModel(
@@ -39,6 +41,15 @@ namespace RWAN10T.Api.Hypermdia
                 {
                     foreach (var element in collection)
                     {
+                        element.Links?.Clear();
+                        await EnrichModel(element, urlHelper);
+                    }
+                }
+                else if (okObjectResult.Value is PagedSearchDTO<T> pagedSearch)
+                {
+                    foreach (var element in pagedSearch.List)
+                    {
+                        element.Links?.Clear();
                         await EnrichModel(element, urlHelper);
                     }
                 }

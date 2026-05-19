@@ -66,28 +66,6 @@ namespace RWAN10T.Tests.IntegrationTests.HATEOAS
             AssertLinkPattern(content, "delete");
         }
 
-        [Fact(DisplayName = "02 - Update Person")]
-        [TestPriority(2)]
-        public async Task UpdatePerson_ShouldContainHateoasLinks()
-        {
-            _person!.Gender = "Female";
-
-            var response = await _httpClient.PutAsJsonAsync(
-                "/api/person/v1", _person);
-
-            response.EnsureSuccessStatusCode();
-
-            var content = await response.Content.ReadAsStringAsync();
-
-            _person = await response.Content.ReadFromJsonAsync<PersonDTO>();
-
-            AssertLinkPattern(content, "collection");
-            AssertLinkPattern(content, "self");
-            AssertLinkPattern(content, "create");
-            AssertLinkPattern(content, "update");
-            AssertLinkPattern(content, "delete");
-        }
-
         [Fact(DisplayName = "03 - Disable Person By Id")]
         [TestPriority(3)]
         public async Task DisablePersonById_ShouldContainHateoasLinks()

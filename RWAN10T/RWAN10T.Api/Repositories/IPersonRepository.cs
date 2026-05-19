@@ -1,9 +1,13 @@
-﻿using RWAN10T.Api.Model;
+﻿using RWAN10T.Api.Hypermdia.Utils;
+using RWAN10T.Api.Model;
 
 namespace RWAN10T.Api.Repositories
 {
     public interface IPersonRepository : IRepository<Person>
     {
         Person Disable(long id);
+        List<Person> FindByName(string firstName, string lastName);
+        PagedSearch<Person> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
     }
 }
+
