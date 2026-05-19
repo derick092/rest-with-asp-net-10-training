@@ -8,22 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: RWAN10T
-
     steps:
       # =========================
       # Checkout
       # =========================
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # =========================
-      # Debug opcional (remove depois se quiser)
-      # =========================
-      - name: List files
-        run: ls -R
 
       # =========================
       # SQL Server
@@ -37,7 +27,7 @@ jobs:
             mcr.microsoft.com/mssql/server:2022-latest
 
           echo "Waiting SQL Server..."
-          timeout 90s bash -c "until docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '@Admin123' -Q 'SELECT 1' -C; do sleep 5; done"
+          timeout 120s bash -c "until docker exec sqlserver_test /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P '@Admin123' -Q 'SELECT 1' -C; do sleep 5; done"
 
       - name: Create database
         run: |
@@ -57,13 +47,13 @@ jobs:
       # Build pipeline
       # =========================
       - name: Restore dependencies
-        run: dotnet restore RWAN10T.sln
+        run: dotnet restore
 
       - name: Build solution
-        run: dotnet build RWAN10T.sln -c Release --no-restore
+        run: dotnet build -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test RWAN10T.sln -c Release --no-build --logger "console;verbosity=detailed"
+        run: dotnet test -c Release --no-build --logger "console;verbosity=detailed"
 
       # =========================
       # Docker build
